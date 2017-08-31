@@ -15,6 +15,18 @@ namespace API_MobileUser.Models
         public string NewPassword { get; set; }
         
         public string ConfirmPassword { get; set; }
+        public Dictionary<string, string> ToMap()
+        {
+
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+            parameters.Add("OldPassword", this.OldPassword);
+            parameters.Add("NewPassword", this.NewPassword);
+            parameters.Add("ConfirmPassword", this.ConfirmPassword);
+            
+
+            return parameters;
+        }
     }
 
 
@@ -51,6 +63,7 @@ namespace API_MobileUser.Models
         }
 
     }
+
 
     public class UserInfoViewModel
     {

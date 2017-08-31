@@ -1,5 +1,6 @@
 ﻿using API_MobileUser.Models;
 using Newtonsoft.Json;
+using Plugin.Toasts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,57 +23,86 @@ namespace API_MobileUser
         private async void Login_Clicked(object sender, EventArgs e)
         {
             this.IsBusy = true;
-            HttpClient client = new HttpClient();
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
-            
-            parameters.Add("grant_type", "password");
-            parameters.Add("username", UserName.Text);
-            parameters.Add("password", Password.Text);
 
-            try
-            {
-                HttpResponseMessage result = await client.PostAsync(Constants.LOGIN_API, new FormUrlEncodedContent(parameters));
+            if(!(UserName.Text == null) && !(Password.Text== null)){
+                HttpClient client = new HttpClient();
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-                if (result.IsSuccessStatusCode)
+                parameters.Add("grant_type", "password");
+                parameters.Add("username", UserName.Text);
+                parameters.Add("password", Password.Text);
+
+                try
                 {
-                    string jsonResult = await result.Content.ReadAsStringAsync();
-                    // TokenResult is a custom model class for deserialization of the Token Endpoint
-                    // Be sure to include Newtonsoft.Json from NuGet
-                    var resultObject = JsonConvert.DeserializeObject<TokenModel>(jsonResult);
-                    App.Token = "Bearer " + resultObject.Access_Token;
+                    HttpResponseMessage result = await client.PostAsync(Constants.LOGIN_API, new FormUrlEncodedContent(parameters));
 
-                    client.DefaultRequestHeaders.Add("Authorization", App.Token);
-                    var profile = await client.GetAsync(Constants.USER_PROFILE_API);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        string jsonResult = await result.Content.ReadAsStringAsync();
+                        // TokenResult is a custom model class for deserialization of the Token Endpoint
+                        // Be sure to include Newtonsoft.Json from NuGet
+                        var resultObject = JsonConvert.DeserializeObject<TokenModel>(jsonResult);
+                        App.Token = "Bearer " + resultObject.Access_Token;
 
-                    var jsonProfile = await profile.Content.ReadAsStringAsync();
-                    var user = JsonConvert.DeserializeObject<UserInfoViewModel>(jsonProfile);
+                        client.DefaultRequestHeaders.Add("Authorization", App.Token);
+                        var profile = await client.GetAsync(Constants.USER_PROFILE_API);
 
-                    App.CurrentUser = user;
+                        var jsonProfile = await profile.Content.ReadAsStringAsync();
+                        var user = JsonConvert.DeserializeObject<UserInfoViewModel>(jsonProfile);
 
-                    await Navigation.PushModalAsync(new UserProfilePage(user));
+                        App.CurrentUser = user;
+                        App.AppSettings.AddOrUpdateValue("CurrentUser", JsonConvert.SerializeObject(user));
 
+                        Navigation.InsertPageBefore(new UserProfilePage(), this);
+                        await Navigation.PopAsync().ConfigureAwait(false);
+
+
+                    }
+                    else
+                    {
+                        var service = DependencyService.Get<IShowAlert>();
+
+                        if(service != null)
+                        {
+                            service.ShowMessage("Login not successful");
+                        }
+                    }
+
+                    this.IsBusy = false;
 
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessagingCenter.Send(this, "Login failed");
+                    string debugBreak = ex.ToString();
+                    var service = DependencyService.Get<IShowAlert>();
+
+                    if (service != null)
+                    {
+                        service.ShowMessage(debugBreak);
+                    }
                 }
-
-                this.IsBusy = false;
-
             }
-            catch (Exception ex)
+            else
             {
-                string debugBreak = ex.ToString();
+                var service = DependencyService.Get<IShowAlert>();
+
+                if (service != null)
+                {
+                    service.ShowMessage("Both fields required");
+                }
             }
+           
         }
 
         private async void SignUp_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new RegisterPage());
+            await Navigation.PushAsync(new RegisterPage());
 
         }
 
+        private void Exit_Clicked(object sender, EventArgs e)
+        {
 
+        }
     }
 }

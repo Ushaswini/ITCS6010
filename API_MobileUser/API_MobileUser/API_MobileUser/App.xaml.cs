@@ -55,7 +55,7 @@ namespace API_MobileUser
             if (!Token.Equals(string.Empty))
             {
                 
-                MainPage = new NavigationPage ( new UserProfilePage(CurrentUser) );
+                MainPage = new NavigationPage ( new UserProfilePage() );
                 Navigation = MainPage.Navigation;
             }
             else

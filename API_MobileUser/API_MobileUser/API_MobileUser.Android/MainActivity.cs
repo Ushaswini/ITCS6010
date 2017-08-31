@@ -6,6 +6,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Xamarin.Forms;
+
 
 namespace API_MobileUser.Droid
 {
@@ -20,6 +22,12 @@ namespace API_MobileUser.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            DependencyService.Register<ShowToastMessage>();
+
+            //DependencyService.Register<ToastNotification>(); // Register your dependency
+            //ToastNotification.Init(this);
+
             LoadApplication(new App());
         }
     }

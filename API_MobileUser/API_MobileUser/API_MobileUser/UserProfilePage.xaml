@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="API_MobileUser.UserProfilePage">
+             x:Class="API_MobileUser.UserProfilePage"
+             Padding="10"
+             Title="Welcome">
 
-    <Grid x:Name="container" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+    <Grid x:Name="container" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -21,16 +24,13 @@
         <Label x:Name="Age" Text="Age" FontSize="Medium" Grid.Row="2" Grid.Column="1"/>
         <Label x:Name="Weight" Text="Weight" FontSize="Medium" Grid.Row="3" Grid.Column="1"/>
         <Label x:Name="Address" Text="Address" FontSize="Medium" Grid.Row="4" Grid.Column="1"/>
-        <Label x:Name="Email" Text="Email" FontSize="Medium" Grid.Row="0" Grid.Column="1"/>
-
-        
-
+        <Label x:Name="Email" Text="Email" FontSize="Medium" Grid.Row="0" Grid.Column="1"/>   
 
     </Grid>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem x:name="edit" Clicked="Edit_Clicked" Text="Edit Profile" />
-        <ToolbarItem x:name="logout" Clicked="Logout_Clicked" Text="Logout"/>
+        <ToolbarItem x:name="Edit" Clicked="Edit_Clicked" Text="Edit" />
+        <ToolbarItem x:name="Logout" Clicked="Logout_Clicked" Text="Logout"/>
     </ContentPage.ToolbarItems>
 
     

@@ -21,26 +21,69 @@ namespace API_MobileUser
 
         private async void Register_Clicked(object sender, EventArgs e)
         {
+            var service = DependencyService.Get<IShowAlert>();
 
-            var user = new Models.RegisterBindingModel
+            try
             {
-                Name = Name.Text,
-                Age = Age.Text,
-                Weight=Weight.Text,
-                Address=Address.Text,
-                Email= Email.Text,
-                Password=Password.Text,
-                ConfirmPassword=ConfirmPassword.Text
+                if ((Name.Text != null) && (Age.Text != null) && (Weight.Text != null) && (Address != null) && (Email.Text != null) && (Password.Text != null) && (ConfirmPassword.Text != null))
+                {
 
-            };
+                    if (!Password.Text.Equals(ConfirmPassword.Text))
+                    {                       
 
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", App.Token);
+                        if (service != null)
+                        {
+                            service.ShowMessage("Passwords need to match");
+                        }
+                    }
+                    else
+                    {
+                        var user = new Models.RegisterBindingModel
+                        {
+                            Name = Name.Text,
+                            Age = Age.Text,
+                            Weight = Weight.Text,
+                            Address = Address.Text,
+                            Email = Email.Text,
+                            Password = Password.Text,
+                            ConfirmPassword = ConfirmPassword.Text
+                        };
+                        
+                        HttpClient client = new HttpClient();
 
-            HttpResponseMessage result = await client.PostAsync(Constants.REGISTER_API, new FormUrlEncodedContent(user.ToMap()));
+                        StringContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8,
+                                    "application/json");
 
-            var jsonResult = await result.Content.ReadAsStringAsync();
-            //TODO Navigate to login page
+                        
+                        HttpResponseMessage result = await client.PostAsync(Constants.REGISTER_API, new FormUrlEncodedContent(user.ToMap()));
+
+                        if (result.IsSuccessStatusCode)
+                        {
+                            Navigation.InsertPageBefore(new MainPage(), this);
+                            await Navigation.PopAsync().ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            service?.ShowMessage("Not successful");
+                        }
+                    }
+
+                }
+                else
+                {
+                    if (service != null)
+                    {
+                        service.ShowMessage("Required all fields");
+                    }
+                }
+            }catch(Exception exp)
+            {
+               
+              
+            }
+
+            
+            
         }
     }
 }
