@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="API_MobileUser.RegisterPage">
+
+    <StackLayout x:Name="container" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <Label Text="Enter Information" FontSize="Large"/>
+        <Entry x:Name="Name" Placeholder="Name"/>
+        <Entry x:Name="Age" Placeholder="Age"/>
+        <Entry x:Name="Weight" Placeholder="Weight"/>
+        <Entry x:Name="Address" Placeholder="Address"/>
+        <Entry x:Name="Email" Placeholder="Email"/>
+        <Entry x:Name="Password" Placeholder="Password" IsPassword="True"/>
+        <Entry x:Name="ConfirmPassword" Placeholder="Confirm Password" IsPassword="True"/>
+        <Button x:Name="Create" Text="Create Account" Clicked="Register_Clicked"/>
+    </StackLayout>
+</ContentPage>
