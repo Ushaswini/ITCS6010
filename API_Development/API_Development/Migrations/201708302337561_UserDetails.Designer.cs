@@ -7,13 +7,13 @@ namespace API_Development.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class BirthDate : IMigrationMetadata
+    public sealed partial class UserDetails : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(BirthDate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UserDetails));
         
         string IMigrationMetadata.Id
         {
-            get { return "201708291527470_BirthDate"; }
+            get { return "201708302337561_UserDetails"; }
         }
         
         string IMigrationMetadata.Source

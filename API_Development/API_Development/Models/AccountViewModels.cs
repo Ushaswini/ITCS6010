@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace API_Development.Models
 {
@@ -27,10 +28,17 @@ namespace API_Development.Models
 
     public class UserInfoViewModel
     {
+        [Required]
+        public string Age { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Address { get; set; }
+        [Required]
+        public string Weight { get; set; }
+        [Required]
+
         public string Email { get; set; }
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
-        public string BirthDate { get; set; }
 
         public bool HasRegistered { get; set; }
 

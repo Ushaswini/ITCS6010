@@ -228,7 +228,6 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,17 +235,9 @@
     <Compile Include="Migrations\201708291404437_InitialCreate.Designer.cs">
       <DependentUpon>201708291404437_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201708291526027_FirstName.cs" />
-    <Compile Include="Migrations\201708291526027_FirstName.Designer.cs">
-      <DependentUpon>201708291526027_FirstName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201708291527065_LastName.cs" />
-    <Compile Include="Migrations\201708291527065_LastName.Designer.cs">
-      <DependentUpon>201708291527065_LastName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201708291527470_BirthDate.cs" />
-    <Compile Include="Migrations\201708291527470_BirthDate.Designer.cs">
-      <DependentUpon>201708291527470_BirthDate.cs</DependentUpon>
+    <Compile Include="Migrations\201708302337561_UserDetails.cs" />
+    <Compile Include="Migrations\201708302337561_UserDetails.Designer.cs">
+      <DependentUpon>201708302337561_UserDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -317,6 +308,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\knockout-3.2.0.debug.js" />
+    <Content Include="Views\Home\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -340,14 +332,8 @@
     <EmbeddedResource Include="Migrations\201708291404437_InitialCreate.resx">
       <DependentUpon>201708291404437_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201708291526027_FirstName.resx">
-      <DependentUpon>201708291526027_FirstName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201708291527065_LastName.resx">
-      <DependentUpon>201708291527065_LastName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201708291527470_BirthDate.resx">
-      <DependentUpon>201708291527470_BirthDate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201708302337561_UserDetails.resx">
+      <DependentUpon>201708302337561_UserDetails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

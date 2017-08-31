@@ -16,6 +16,8 @@ using Microsoft.Owin.Security.OAuth;
 using API_Development.Models;
 using API_Development.Providers;
 using API_Development.Results;
+using System.Data.Entity.Validation;
+using System.Linq;
 
 namespace API_Development.Controllers
 {
@@ -54,7 +56,7 @@ namespace API_Development.Controllers
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         [Route("UserInfo")]
-        public string GetUserInfo()
+        public UserInfoViewModel GetUserInfo()
         {
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
@@ -63,17 +65,19 @@ namespace API_Development.Controllers
             var currentUser = manager.FindById(currentUserId);
 
 
-            var model= new UserInfoViewModel
+            
+            var model = new UserInfoViewModel
             {
                 Email = currentUser.Email,
-                FirstName=currentUser.FirstName,
-                LastName=currentUser.LastName,
-                BirthDate=currentUser.BirthDate,                
+                Name=currentUser.UserDetails.Name,
+                Age=currentUser.UserDetails.Age,
+                Weight=currentUser.UserDetails.Weight,
+                Address=currentUser.UserDetails.Address,
+                
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
-
-            return model.Email + model.FirstName;
+            return model;
         }
 
         // POST api/Account/Logout
@@ -163,18 +167,13 @@ namespace API_Development.Controllers
             //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
             var currentUser = manager.FindById(currentUserId);
 
-            currentUser.FirstName = model.FirstName;
-            currentUser.LastName = model.LastName;
-            currentUser.BirthDate = model.BirthDate;
-            //var user = new ApplicationUser()
-            //{
-            //    UserName = model.Email,
-            //    Email = model.Email,
-            //    FirstName = model.FirstName,
-            //    LastName = model.LastName,
-            //    BirthDate = model.BirthDate
-            //};
+            currentUser.UserDetails.Name = model.Name;
+            currentUser.UserDetails.Address = model.Address;
+            currentUser.UserDetails.Weight = model.Weight;
+            currentUser.UserDetails.Age = model.Age;
+
             
+                        
             IdentityResult result = await manager.UpdateAsync(currentUser);
 
 
@@ -376,27 +375,72 @@ namespace API_Development.Controllers
         [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
-            if (!ModelState.IsValid)
+
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var user = new ApplicationUser() {
-                                                UserName = model.Email,
-                                                Email = model.Email,
-                                                FirstName = model.FirstName,
-                                                LastName =model.LastName,
-                                                BirthDate =model.BirthDate
-                                             };
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+                //var user = new ApplicationUser() {
+                //                                    UserName = model.Email,
+                //                                    Email = model.Email,
+                //                                    FirstName = model.FirstName,
+                //                                    LastName =model.LastName,
+                //                                    BirthDate =model.BirthDate
+                //                                 };
+
+                var user = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    UserDetails = new UserDetails
+                    {
+                        Name = model.Name,
+                        Age = model.Age,
+                        Weight = model.Weight,
+                        Address = model.Address
+                    }
+
+                };
+
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+
+                IdentityResult result = await manager.CreateAsync(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+                return Ok();
+
+            }          
+
+            catch (Exception ex)
             {
-                return GetErrorResult(result);
-            }
 
-            return Ok();
+                Console.Write(ex.Message);
+                // Retrieve the error messages as a list of strings.
+                //var errorMessages = ex.EntityValidationErrors
+                //        .SelectMany(x => x.ValidationErrors)
+                //        .Select(x => x.ErrorMessage);
+
+                //// Join the list to a single string.
+                //var fullErrorMessage = string.Join("; ", errorMessages);
+
+                //// Combine the original exception message with the new one.
+                //var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
+
+                //Console.Write(exceptionMessage);
+
+                //// Throw a new DbEntityValidationException with the improved exception message.
+                //throw new DbEntityValidationException(exceptionMessage, ex.EntityValidationErrors);
+                throw;
+            }
         }
 
         // POST api/Account/RegisterExternal

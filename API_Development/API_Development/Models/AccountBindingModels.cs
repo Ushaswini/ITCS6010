@@ -50,18 +50,18 @@ namespace API_Development.Models
         public string ConfirmPassword { get; set; }
 
         [Required]
-        [Display(Name = "FirstName")]
-        public string FirstName { get; set; }
-
+        [Display(Name = "Name")]
+        public string Name { get; set; }      
         [Required]
-        [Display(Name = "LastName")]
-        public string LastName { get; set; }
-
+        [Display(Name = "Age")]
+        public string Age { get; set; }
         [Required]
-        [Display(Name = "BirtDate")]
-        public string BirthDate { get; set; }
+        [Display(Name = "Weight")]
+        public string Weight { get; set; }
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
 
-        
     }
 
     public class RegisterExternalBindingModel

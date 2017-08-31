@@ -10,17 +10,18 @@
     self.registerPassword = ko.observable();
     self.registerPassword2 = ko.observable();
 
-    self.firstname = ko.observable();
-    self.lastname = ko.observable();
-    self.username = ko.observable();
-    self.birthdate = ko.observable();
+    self.name = ko.observable();
+    self.age = ko.observable();
+    self.address = ko.observable();
+    self.weight = ko.observable();
 
-    self.newfirstname = ko.observable();
-    self.newlastname = ko.observable();
-    self.newbirthdate = ko.observable();
-    self.oldpassword = ko.observable();
+    self.newname = ko.observable();
+    self.newage = ko.observable();
+    self.newweight = ko.observable();
+    self.newaddress = ko.observable();
     self.newpassword = ko.observable();
     self.newpassword2 = ko.observable();
+    self.oldpassword = ko.observable();
 
     self.loginEmail = ko.observable();
     self.loginPassword = ko.observable();
@@ -66,7 +67,7 @@
             //url: '/api/values',
             headers: headers
         }).done(function (data) {
-            self.result(data);
+            self.result(data.Name + " of age "+ data.Age + " and weight "+ data.Weight +" kgs stays at " + data.Address + ".");
         }).fail(showError);
     }
 
@@ -78,9 +79,11 @@
             Email: self.registerEmail(),
             Password: self.registerPassword(),
             ConfirmPassword: self.registerPassword2(),            
-            FirstName: self.firstname(),
-            LastName:self.lastname(),
-            BirthDate:self.birthdate()
+            Name: self.name(),
+            Age: self.age(),
+            Address: self.address(),
+            Weight: self.weight()
+           
         };
 
         $.ajax({
@@ -109,6 +112,7 @@
             data: loginData
         }).done(function (data) {
             self.user(data.userName);
+            console.log(data);
             // Cache the access token in session storage.
             sessionStorage.setItem(tokenKey, data.access_token);
         }).fail(showError);
@@ -142,12 +146,14 @@
         }
 
         var data = {
-            Email: "usha@gmail.com",
-            Name:"New edited",
+            Email: "testing@gmail.com",
             
-            FirstName: self.newfirstname(),
-            LastName: self.newlastname(),
-            BirthDate: self.newbirthdate()
+            
+            Name: self.newname(),
+            Age: self.newage(),
+            Address: self.newaddress(),
+            Weight: self.newweight(),
+           
         };
 
         $.ajax({
