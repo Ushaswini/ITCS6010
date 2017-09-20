@@ -12,6 +12,8 @@ namespace Homework1.Models
         public bool IsRead { get; set; }
         public string ReceiverId { get; set; }
         public string SenderId { get; set; }
+        public string RegionId { get; set; }
+        public bool IsUnLocked { get; set; }
 
     }
 }

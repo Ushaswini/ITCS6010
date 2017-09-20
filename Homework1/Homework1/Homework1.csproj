@@ -239,6 +239,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Controllers\RegionsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -251,11 +253,21 @@
     <Compile Include="Migrations\201709172043295_Messages.Designer.cs">
       <DependentUpon>201709172043295_Messages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709192030152_message-lock.cs" />
+    <Compile Include="Migrations\201709192030152_message-lock.Designer.cs">
+      <DependentUpon>201709192030152_message-lock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709192131392_Seed.cs" />
+    <Compile Include="Migrations\201709192131392_Seed.Designer.cs">
+      <DependentUpon>201709192131392_Seed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\Initializer.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Region.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\CustomOAuthProvider.cs" />
@@ -295,6 +307,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="keys.config" />
+    <None Include="Properties\PublishProfiles\Homework01 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -347,6 +360,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709172043295_Messages.resx">
       <DependentUpon>201709172043295_Messages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709192030152_message-lock.resx">
+      <DependentUpon>201709192030152_message-lock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709192131392_Seed.resx">
+      <DependentUpon>201709192131392_Seed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
