@@ -15,5 +15,21 @@ namespace LocationAwareMessageMeApp.Models
 
         public string MessageTime { get; set; }
 
+        public Dictionary<string, string> ToMap()
+        {
+
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+            parameters.Add("MessageBody", this.MessageBody);
+            parameters.Add("IsRead", this.IsRead+"");
+            parameters.Add("ReceiverId", this.ReceiverId);
+            parameters.Add("SenderId", this.SenderId);
+            parameters.Add("MessageTime", this.MessageTime);
+            
+
+
+            return parameters;
+        }
+
     }
 }

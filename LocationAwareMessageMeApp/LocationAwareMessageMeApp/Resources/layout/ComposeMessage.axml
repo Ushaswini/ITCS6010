@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10px">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <TextView
+            android:id="@+id/MessageTo"
+            android:text="To: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/ListUsers"
+            android:src="@drawable/ic_action_person"
+            android:layout_gravity="end"
+            android:layout_height="75px"
+            android:layout_width="75px"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <TextView
+            android:id="@+id/Region"
+            android:text="Region: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/ListRegions"
+            android:src="@drawable/location"
+            android:layout_gravity="end"
+            android:layout_height="75px"
+            android:layout_width="75px"
+            android:scaleType="fitXY" />
+    </LinearLayout>
+    <EditText
+        android:id="@+id/ComposeMessage"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:hint="Compose message here" />
+    <Button
+        android:id="@+id/SendMessage"
+        android:layout_gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:text="Send"
+        android:textAllCaps="false" />
+</LinearLayout>

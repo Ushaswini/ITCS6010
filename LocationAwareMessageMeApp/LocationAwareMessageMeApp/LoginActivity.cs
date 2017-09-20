@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -39,6 +35,12 @@ namespace LocationAwareMessageMeApp
             // Create your application here
         }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+            //SystemRequirementsChecker.CheckWithDefaultDialogs(this);
+        }
+
         private void Init()
         {
             etUserName = FindViewById<EditText>(Resource.Id.username);
@@ -65,8 +67,9 @@ namespace LocationAwareMessageMeApp
 
             if (!IsInValidInput())
             {
-                ConnectivityManager service = (ConnectivityManager)GetSystemService(ConnectivityService);
-                NetworkInfo info = service.ActiveNetworkInfo;
+                //var connMgr = (ConnectivityManager)GetSystemService(ConnectivityService);
+                var manager = (ConnectivityManager)GetSystemService(ConnectivityService);
+                NetworkInfo info = manager.ActiveNetworkInfo;
 
                 if (info != null)
                 {
@@ -87,10 +90,28 @@ namespace LocationAwareMessageMeApp
                             // TokenResult is a custom model class for deserialization of the Token Endpoint
                             
                             var resultObject = JsonConvert.DeserializeObject<TokenModel>(jsonResult);
-                            prefEditor.PutString(Constants.PREFERENCE_TAG, JsonConvert.SerializeObject(resultObject));
+                            string token = Constants.BEARER + resultObject.Access_Token;
+
+                            client.DefaultRequestHeaders.Add("Authorization", token);
+                            var profile = await client.GetAsync(String.Format(Constants.USER_PROFILE_URL, resultObject.Access_Token));
+
+                            var jsonProfile = await profile.Content.ReadAsStringAsync();
+                            var user = JsonConvert.DeserializeObject<User>(jsonProfile);
+
+                   
+                            prefEditor.PutString(Constants.PREF_USER_TAG, JsonConvert.SerializeObject(user));
+                            prefEditor.PutString(Constants.PREF_TOKEN_TAG, token);
+                            prefEditor.Apply();
+
+                            Intent openInbox = new Intent(this, typeof(InboxActivity));
+                            StartActivity(openInbox);
+                            Finish();
                         }
                         else
                         {
+                            Log.Debug(Constants.TAG, "Error occured");
+
+
                             //todo: get message and show
                         }
                     }

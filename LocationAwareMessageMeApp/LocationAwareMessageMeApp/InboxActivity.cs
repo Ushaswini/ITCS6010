@@ -41,18 +41,27 @@ namespace LocationAwareMessageMeApp
             lvMessages.Adapter = adapter;
         }
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
+        
+
+        public override bool OnPrepareOptionsMenu(IMenu menu)
         {
-            return base.OnCreateOptionsMenu(menu);
+            MenuInflater.Inflate(Resource.Menu.inbox_menu, menu);
+            return base.OnPrepareOptionsMenu(menu);
         }
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
+            switch (item.ItemId)
+            {
+                case Resource.Id.compose:
+                    Intent composeMessage = new Intent(this, typeof(ComposeMessageActivity));
+                    StartActivity(composeMessage);
+                    //do something
+                    return true;
+                case Resource.Id.refresh:
+                    //do something
+                    return true;
+            }
             return base.OnOptionsItemSelected(item);
-        }
-
-        public override bool OnMenuItemSelected(int featureId, IMenuItem item)
-        {
-            return base.OnMenuItemSelected(featureId, item);
         }
 
 

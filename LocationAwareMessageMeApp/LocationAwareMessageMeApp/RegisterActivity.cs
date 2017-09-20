@@ -11,10 +11,15 @@ using Android.Views;
 using Android.Widget;
 using Android.Net;
 using Android.Support.Design.Widget;
+using LocationAwareMessageMeApp.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Android.Util;
 
 namespace LocationAwareMessageMeApp
 {
-    [Activity(Label = "RegisterActivity", Theme ="@style / Theme.AppCompat")]
+    [Activity(Label = "RegisterActivity")]
+    //, Theme ="@style / Theme.AppCompat"
     public class RegisterActivity : Activity
     {
         EditText etFirstName;
@@ -42,7 +47,7 @@ namespace LocationAwareMessageMeApp
             btnRegister.Click += OnRegisterClicked;
         }
 
-        private void OnRegisterClicked(object sender, EventArgs e)
+        private async void OnRegisterClicked(object sender, EventArgs e)
         {
             string firstName = etFirstName.Text;
             string lastName = etLastName.Text;
@@ -54,10 +59,36 @@ namespace LocationAwareMessageMeApp
             {
                 ConnectivityManager service = (ConnectivityManager)GetSystemService(ConnectivityService);
                 NetworkInfo info = service.ActiveNetworkInfo;
-                if(info != null)
+                if (info != null)
                 {
+                    var user = new RegisterBindingModel
+                    {
+                        UserName = userName,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Password = password,
+                        ConfirmPassword = confirmPassword
+                    };
+
+                    HttpClient client = new HttpClient();
+
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8,
+                                "application/json");
 
 
+                    HttpResponseMessage result = await client.PostAsync(Constants.REGISTER_URL, new FormUrlEncodedContent(user.ToMap()));
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        Toast.MakeText(this, "Registration Successful", ToastLength.Short).Show();
+                        Intent GoBackToLogin = new Intent(this, typeof(LoginActivity));
+                        StartActivity(GoBackToLogin);
+                        Finish();
+                    }
+                    else
+                    {
+                        Log.Debug(Constants.TAG, "Error occured");
+                    }
                 }
                 else
                 {
