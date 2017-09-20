@@ -15,5 +15,7 @@ namespace Homework1.Models
         public string RegionId { get; set; }
         public bool IsUnLocked { get; set; }
 
+        public string MessageTime { get; set; }
+
     }
 }

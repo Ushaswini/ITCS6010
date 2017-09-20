@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Homework1.Models;
+using Microsoft.AspNet.Identity;
+using System.IdentityModel.Tokens;
+using System.IdentityModel.Claims;
 
 namespace Homework1.Controllers
 {
@@ -18,13 +21,13 @@ namespace Homework1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Messages
-        [Authorize]
+        
         public IQueryable<Message> GetMessages()
         {
             return db.Messages;
         }
-
-        [Authorize]
+        
+        
         public IQueryable<Message> GetMessagesForReceiver(string receiverId)
         {
             var result = from d in db.Messages where d.ReceiverId == (receiverId) select d;
@@ -33,7 +36,7 @@ namespace Homework1.Controllers
 
         // GET: api/Messages/5
         [ResponseType(typeof(Message))]
-        [Authorize]
+        
         public async Task<IHttpActionResult> GetMessage(int id)
         {
             Message message = await db.Messages.FindAsync(id);
@@ -47,7 +50,7 @@ namespace Homework1.Controllers
 
         // PUT: api/Messages/5
         [ResponseType(typeof(void))]
-        [Authorize]
+        
         public async Task<IHttpActionResult> PutMessage(int id, Message message)
         {
             if (!ModelState.IsValid)
@@ -83,7 +86,7 @@ namespace Homework1.Controllers
 
         // POST: api/Messages
         [ResponseType(typeof(Message))]
-        [Authorize]
+       
         public async Task<IHttpActionResult> PostMessage(Message message)
         {
             if (!ModelState.IsValid)
@@ -99,7 +102,7 @@ namespace Homework1.Controllers
 
         // DELETE: api/Messages/5
         [ResponseType(typeof(Message))]
-        [Authorize]
+        
         public async Task<IHttpActionResult> DeleteMessage(int id)
         {
             Message message = await db.Messages.FindAsync(id);

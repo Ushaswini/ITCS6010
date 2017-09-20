@@ -26,7 +26,7 @@ namespace Homework1.Models
     {
         public System.Data.Entity.DbSet<Message> Messages { get; set; }
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("AzureDatabaseConnection", throwIfV1Schema: false)
         {
             
             

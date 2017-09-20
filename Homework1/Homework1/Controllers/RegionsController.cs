@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Homework1.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Homework1.Controllers
 {
@@ -18,14 +19,14 @@ namespace Homework1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Regions
-        [Authorize]
+        
         public IQueryable<Region> GetRegions()
         {
             return db.Regions;
         }
 
         // GET: api/Regions/5
-        [Authorize]
+        
         [ResponseType(typeof(Region))]
         public async Task<IHttpActionResult> GetRegion(string id)
         {
@@ -39,7 +40,7 @@ namespace Homework1.Controllers
         }
 
         // PUT: api/Regions/5
-        [Authorize]
+        
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutRegion(string id, Region region)
         {
@@ -75,7 +76,7 @@ namespace Homework1.Controllers
         }
 
         // POST: api/Regions
-        [Authorize]
+        
         [ResponseType(typeof(Region))]
         public async Task<IHttpActionResult> PostRegion(Region region)
         {
@@ -106,7 +107,7 @@ namespace Homework1.Controllers
         }
 
         // DELETE: api/Regions/5
-        [Authorize]
+        
         [ResponseType(typeof(Region))]
         public async Task<IHttpActionResult> DeleteRegion(string id)
         {

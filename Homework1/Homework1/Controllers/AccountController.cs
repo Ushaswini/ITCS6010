@@ -16,6 +16,8 @@ using Microsoft.Owin.Security.OAuth;
 using Homework1.Models;
 using Homework1.Providers;
 using Homework1.Results;
+using System.IdentityModel.Tokens;
+using System.Linq;
 
 namespace Homework1.Controllers
 {
@@ -51,19 +53,25 @@ namespace Homework1.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        // GET api/Account/UserInfo
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
-        {
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-            return new UserInfoViewModel
+        // GET api/Account/UserInfo
+        [AllowAnonymous]
+        [Route("UserInfo")]
+        public UserInfoViewModel GetUserInfo(string token)
+        {
+            JwtSecurityToken tok = new JwtSecurityToken(token);
+            string currentUserId = tok.Claims.Where(x => x.Type == "unique_name").FirstOrDefault().Value;
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var currentUser = manager.FindById(currentUserId);
+            var model = new UserInfoViewModel
             {
-                Email = User.Identity.GetUserName(),
-                HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                Email = currentUser.Email,
+                FirstName = currentUser.FirstName,
+                LastName = currentUser.LastName,
+                Id = currentUser.Id,
+                UserName = currentUser.UserName
             };
+            return model;
         }
 
         // POST api/Account/Logout
@@ -317,6 +325,7 @@ namespace Homework1.Controllers
 
             return logins;
         }
+
 
         // POST api/Account/Register
         [AllowAnonymous]

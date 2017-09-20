@@ -43,7 +43,7 @@ namespace Homework1.Providers
         private static ClaimsIdentity SetClaimsIdentity(OAuthGrantResourceOwnerCredentialsContext context, IdentityUser user)
         {
             var identity = new ClaimsIdentity("JWT");
-            identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.Id));
             identity.AddClaim(new Claim("sub", context.UserName));
 
             var userRoles = context.OwinContext.Get<ApplicationUserManager>().GetRoles(user.Id);

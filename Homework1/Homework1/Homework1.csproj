@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201709192131392_Seed.Designer.cs">
       <DependentUpon>201709192131392_Seed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709201900396_message-time.cs" />
+    <Compile Include="Migrations\201709201900396_message-time.Designer.cs">
+      <DependentUpon>201709201900396_message-time.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Initializer.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -366,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709192131392_Seed.resx">
       <DependentUpon>201709192131392_Seed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709201900396_message-time.resx">
+      <DependentUpon>201709201900396_message-time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,4 +1,5 @@
 ﻿using Homework1.Models;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Homework1.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Users
-        [Authorize]
+        
         public List<ApplicationUser> GetUsers()
         {
             return UserManager.Users.ToList();
