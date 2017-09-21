@@ -13,9 +13,12 @@ using Homework1.Models;
 using Microsoft.AspNet.Identity;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Claims;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity.Migrations;
 
 namespace Homework1.Controllers
 {
+    [RoutePrefix("api/Messages")]
     public class MessagesController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -34,9 +37,73 @@ namespace Homework1.Controllers
             return result;
         }
 
+        //api/Messages/EditReadStatus
+        [Route("EditReadStatus")]
+        public async Task<IHttpActionResult> EditReadStatus(int messageId)
+        {
+            Message message = await db.Messages.FindAsync(messageId);
+
+            if(message != null)
+            {
+                message.IsRead = true;
+                db.Messages.AddOrUpdate(message);
+                await db.SaveChangesAsync();
+
+                return Ok(message);
+            }
+            return NotFound();
+        }
+
+        //api/Messages/EditLockStatus
+        [Route("EditLockStatus")]
+        public async Task<IHttpActionResult> EditLockStatus(int messageId)
+        {
+            Message message = await db.Messages.FindAsync(messageId);
+
+            if (message != null)
+            {
+                message.IsUnLocked = true;
+                db.Messages.AddOrUpdate(message);
+                await db.SaveChangesAsync();
+
+                return Ok(message);
+            }
+            return NotFound();
+        }
+
+        private IHttpActionResult GetErrorResult(IdentityResult result)
+        {
+            if (result == null)
+            {
+                return InternalServerError();
+            }
+
+            if (!result.Succeeded)
+            {
+                if (result.Errors != null)
+                {
+                    foreach (string error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
+
+                if (ModelState.IsValid)
+                {
+                    // No ModelState errors are available to send, so just return an empty BadRequest.
+                    return BadRequest();
+                }
+
+                return BadRequest(ModelState);
+            }
+
+            return null;
+        }
+
+
         // GET: api/Messages/5
         [ResponseType(typeof(Message))]
-        
+
         public async Task<IHttpActionResult> GetMessage(int id)
         {
             Message message = await db.Messages.FindAsync(id);
