@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="10px">
     <ImageView
-        android:layout_height="125px"
-        android:layout_width="125px"
+        android:layout_height="75px"
+        android:layout_width="75px"
         android:id="@+id/isRead"
         android:layout_marginRight="5px" />
     <TextView
@@ -28,8 +28,8 @@
             android:text="Message Time"
             android:layout_gravity="right" />
         <ImageView
-            android:layout_height="100px"
-            android:layout_width="100px"
+            android:layout_height="75px"
+            android:layout_width="75px"
             android:id="@+id/isLocked" />
     </LinearLayout>
 </LinearLayout>

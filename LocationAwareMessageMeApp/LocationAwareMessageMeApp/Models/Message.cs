@@ -13,6 +13,9 @@ namespace LocationAwareMessageMeApp.Models
         public string ReceiverId { get; set; }
         public string SenderId { get; set; }
 
+        public bool IsLocked { get; set; }
+        public string RegionId { get; set; }
+
         public string MessageTime { get; set; }
 
         public Dictionary<string, string> ToMap()
@@ -25,6 +28,8 @@ namespace LocationAwareMessageMeApp.Models
             parameters.Add("ReceiverId", this.ReceiverId);
             parameters.Add("SenderId", this.SenderId);
             parameters.Add("MessageTime", this.MessageTime);
+            parameters.Add("IsLocked", this.IsLocked+"");
+            parameters.Add("RegionId", this.RegionId);
             
 
 

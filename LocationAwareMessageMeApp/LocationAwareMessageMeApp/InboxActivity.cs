@@ -10,6 +10,12 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using LocationAwareMessageMeApp.Adapters;
+using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Android.Preferences;
+using LocationAwareMessageMeApp.Models;
+using Android.Util;
 
 namespace LocationAwareMessageMeApp
 {
@@ -17,10 +23,10 @@ namespace LocationAwareMessageMeApp
     public class InboxActivity : Activity
     {
         ListView lvMessages;
-
         MessagesAdapter adapter;
-
         List<Models.Message> Messages;
+        ISharedPreferences pref;
+        User CurrentUser;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -30,18 +36,60 @@ namespace LocationAwareMessageMeApp
 
             Init();
 
-            // TODO get data
         }
 
         private void Init()
         {
-            lvMessages = FindViewById<ListView>(Resource.Id.lvChats);
             Messages = new List<Models.Message>();
+
+            lvMessages = FindViewById<ListView>(Resource.Id.lvChats);
             adapter = new MessagesAdapter(this,Messages);
             lvMessages.Adapter = adapter;
+            lvMessages.ItemClick += OnListItemClick;
+
+            pref = PreferenceManager.GetDefaultSharedPreferences(this);        
+            CurrentUser = JsonConvert.DeserializeObject<User>(pref.GetString(Constants.PREF_USER_TAG, ""));
+
         }
 
-        
+        private void OnListItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            Intent readMessage = new Intent(this, typeof(ReadMessageActivity));
+            readMessage.PutExtra(Constants.INTENT_TAG, JsonConvert.SerializeObject(Messages[e.Position]));
+            StartActivity(readMessage);
+        }
+
+        protected async override void OnResume()
+        {
+            base.OnResume();
+            await GetDataAsync();
+
+        }
+
+        protected async Task GetDataAsync()
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+
+                    string url = String.Format(Constants.GET_MESSAGES_URL, CurrentUser.Id);
+                    var data = await client.GetStringAsync(url);
+                    var messages = JsonConvert.DeserializeObject<List<Models.Message>>(data);
+                    messages = messages.OrderBy(i => i.MessageTime).ToList();
+
+                    RunOnUiThread(() =>
+                    {
+                        adapter.UpdateData(messages);
+                    });
+                }
+            }catch(Exception e)
+            {
+                Log.Error(Constants.TAG, e.Message);
+            }
+           
+        }
 
         public override bool OnPrepareOptionsMenu(IMenu menu)
         {
@@ -58,7 +106,7 @@ namespace LocationAwareMessageMeApp
                     //do something
                     return true;
                 case Resource.Id.refresh:
-                    //do something
+                    GetDataAsync();
                     return true;
             }
             return base.OnOptionsItemSelected(item);

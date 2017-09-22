@@ -18,8 +18,8 @@ using Android.Util;
 
 namespace LocationAwareMessageMeApp
 {
-    [Activity(Label = "RegisterActivity")]
-    //, Theme ="@style / Theme.AppCompat"
+    [Activity(Label = "Register")]
+    
     public class RegisterActivity : Activity
     {
         EditText etFirstName;
@@ -70,24 +70,22 @@ namespace LocationAwareMessageMeApp
                         ConfirmPassword = confirmPassword
                     };
 
-                    HttpClient client = new HttpClient();
-
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8,
-                                "application/json");
-
-
-                    HttpResponseMessage result = await client.PostAsync(Constants.REGISTER_URL, new FormUrlEncodedContent(user.ToMap()));
-
-                    if (result.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        Toast.MakeText(this, "Registration Successful", ToastLength.Short).Show();
-                        Intent GoBackToLogin = new Intent(this, typeof(LoginActivity));
-                        StartActivity(GoBackToLogin);
-                        Finish();
-                    }
-                    else
-                    {
-                        Log.Debug(Constants.TAG, "Error occured");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        HttpResponseMessage result = await client.PostAsync(Constants.REGISTER_URL, new FormUrlEncodedContent(user.ToMap()));
+
+                        if (result.IsSuccessStatusCode)
+                        {
+                            Toast.MakeText(this, "Registration Successful", ToastLength.Short).Show();
+                            Intent GoBackToLogin = new Intent(this, typeof(LoginActivity));
+                            StartActivity(GoBackToLogin);
+                            Finish();
+                        }
+                        else
+                        {
+                            Log.Debug(Constants.TAG, "Error occured");
+                        }
                     }
                 }
                 else

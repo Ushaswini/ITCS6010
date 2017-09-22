@@ -2132,10 +2132,10 @@ namespace LocationAwareMessageMeApp
 			public const int location = 2130837604;
 			
 			// aapt resource value: 0x7f020065
-			public const int @lock = 2130837605;
+			public const int lock_open = 2130837605;
 			
 			// aapt resource value: 0x7f020066
-			public const int lock_open = 2130837606;
+			public const int locked = 2130837606;
 			
 			// aapt resource value: 0x7f020067
 			public const int navigation_empty_icon = 2130837607;
@@ -2197,6 +2197,9 @@ namespace LocationAwareMessageMeApp
 			
 			// aapt resource value: 0x7f070074
 			public const int ListUsers = 2131165300;
+			
+			// aapt resource value: 0x7f0700a8
+			public const int MessageBody = 2131165352;
 			
 			// aapt resource value: 0x7f070073
 			public const int MessageTo = 2131165299;
@@ -2321,11 +2324,11 @@ namespace LocationAwareMessageMeApp
 			// aapt resource value: 0x7f070024
 			public const int collapseActionView = 2131165220;
 			
-			// aapt resource value: 0x7f0700ae
-			public const int compose = 2131165358;
+			// aapt resource value: 0x7f0700af
+			public const int compose = 2131165359;
 			
-			// aapt resource value: 0x7f0700aa
-			public const int confirmPassword = 2131165354;
+			// aapt resource value: 0x7f0700ab
+			public const int confirmPassword = 2131165355;
 			
 			// aapt resource value: 0x7f07007b
 			public const int container = 2131165307;
@@ -2347,6 +2350,9 @@ namespace LocationAwareMessageMeApp
 			
 			// aapt resource value: 0x7f070047
 			public const int default_activity_button = 2131165255;
+			
+			// aapt resource value: 0x7f0700b2
+			public const int delete = 2131165362;
 			
 			// aapt resource value: 0x7f07007e
 			public const int design_bottom_sheet = 2131165310;
@@ -2399,8 +2405,8 @@ namespace LocationAwareMessageMeApp
 			// aapt resource value: 0x7f070033
 			public const int fill_vertical = 2131165235;
 			
-			// aapt resource value: 0x7f0700a8
-			public const int firstname = 2131165352;
+			// aapt resource value: 0x7f0700a9
+			public const int firstname = 2131165353;
 			
 			// aapt resource value: 0x7f07003f
 			public const int @fixed = 2131165247;
@@ -2438,8 +2444,8 @@ namespace LocationAwareMessageMeApp
 			// aapt resource value: 0x7f07007a
 			public const int largeLabel = 2131165306;
 			
-			// aapt resource value: 0x7f0700a9
-			public const int lastname = 2131165353;
+			// aapt resource value: 0x7f0700aa
+			public const int lastname = 2131165354;
 			
 			// aapt resource value: 0x7f070034
 			public const int left = 2131165236;
@@ -2462,8 +2468,8 @@ namespace LocationAwareMessageMeApp
 			// aapt resource value: 0x7f070087
 			public const int lvChats = 2131165319;
 			
-			// aapt resource value: 0x7f0700ad
-			public const int masked = 2131165357;
+			// aapt resource value: 0x7f0700ae
+			public const int masked = 2131165358;
 			
 			// aapt resource value: 0x7f070097
 			public const int media_actions = 2131165335;
@@ -2525,11 +2531,14 @@ namespace LocationAwareMessageMeApp
 			// aapt resource value: 0x7f07005d
 			public const int radio = 2131165277;
 			
-			// aapt resource value: 0x7f0700af
-			public const int refresh = 2131165359;
+			// aapt resource value: 0x7f0700b0
+			public const int refresh = 2131165360;
 			
-			// aapt resource value: 0x7f0700ab
-			public const int register = 2131165355;
+			// aapt resource value: 0x7f0700ac
+			public const int register = 2131165356;
+			
+			// aapt resource value: 0x7f0700b1
+			public const int reply = 2131165361;
 			
 			// aapt resource value: 0x7f070035
 			public const int right = 2131165237;
@@ -2708,8 +2717,8 @@ namespace LocationAwareMessageMeApp
 			// aapt resource value: 0x7f07000e
 			public const int view_offset_helper = 2131165198;
 			
-			// aapt resource value: 0x7f0700ac
-			public const int visible = 2131165356;
+			// aapt resource value: 0x7f0700ad
+			public const int visible = 2131165357;
 			
 			// aapt resource value: 0x7f070027
 			public const int withText = 2131165223;
@@ -2957,19 +2966,22 @@ namespace LocationAwareMessageMeApp
 			public const int notification_template_part_time = 2130903101;
 			
 			// aapt resource value: 0x7f03003e
-			public const int Register = 2130903102;
+			public const int ReadMessage = 2130903102;
 			
 			// aapt resource value: 0x7f03003f
-			public const int select_dialog_item_material = 2130903103;
+			public const int Register = 2130903103;
 			
 			// aapt resource value: 0x7f030040
-			public const int select_dialog_multichoice_material = 2130903104;
+			public const int select_dialog_item_material = 2130903104;
 			
 			// aapt resource value: 0x7f030041
-			public const int select_dialog_singlechoice_material = 2130903105;
+			public const int select_dialog_multichoice_material = 2130903105;
 			
 			// aapt resource value: 0x7f030042
-			public const int support_simple_spinner_dropdown_item = 2130903106;
+			public const int select_dialog_singlechoice_material = 2130903106;
+			
+			// aapt resource value: 0x7f030043
+			public const int support_simple_spinner_dropdown_item = 2130903107;
 			
 			static Layout()
 			{
@@ -2986,6 +2998,9 @@ namespace LocationAwareMessageMeApp
 			
 			// aapt resource value: 0x7f0d0000
 			public const int inbox_menu = 2131558400;
+			
+			// aapt resource value: 0x7f0d0001
+			public const int readmsg_menu = 2131558401;
 			
 			static Menu()
 			{

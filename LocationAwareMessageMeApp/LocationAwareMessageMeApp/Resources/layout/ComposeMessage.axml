@@ -18,8 +18,8 @@
             android:id="@+id/ListUsers"
             android:src="@drawable/ic_action_person"
             android:layout_gravity="end"
-            android:layout_height="75px"
-            android:layout_width="75px"
+            android:layout_height="125px"
+            android:layout_width="125px"
             android:scaleType="fitXY" />
     </LinearLayout>
     <LinearLayout
@@ -36,8 +36,8 @@
             android:id="@+id/ListRegions"
             android:src="@drawable/location"
             android:layout_gravity="end"
-            android:layout_height="75px"
-            android:layout_width="75px"
+            android:layout_height="125px"
+            android:layout_width="125px"
             android:scaleType="fitXY" />
     </LinearLayout>
     <EditText

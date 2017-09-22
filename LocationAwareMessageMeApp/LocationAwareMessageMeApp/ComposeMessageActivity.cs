@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using LocationAwareMessageMeApp.Models;
 using System.Threading.Tasks;
 using Android.Util;
+using System.Net.Http.Headers;
 
 namespace LocationAwareMessageMeApp
 {
@@ -55,45 +56,49 @@ namespace LocationAwareMessageMeApp
         {
             try
             {
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", Access_Token);
-
-                HttpResponseMessage regions = await client.GetAsync(Constants.GET_REGIONS_URL);
-                var users = await client.GetAsync(Constants.GET_USERS_URL);
-
-                if (regions.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    var jsonRegions = await regions.Content.ReadAsStringAsync();
-                    Log.Debug(Constants.TAG, jsonRegions);
-                    var regionsList = JsonConvert.DeserializeObject<List<Region>>(jsonRegions);
-                    RunOnUiThread(() =>
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Access_Token);
+
+
+
+                    HttpResponseMessage regions = await client.GetAsync(Constants.GET_REGIONS_URL);
+                    var users = await client.GetAsync(Constants.GET_USERS_URL);
+
+                    if (regions.IsSuccessStatusCode)
                     {
-                        Regions.Clear();
-                        Regions.AddRange(regionsList);
-                    });
-                }
-                else
-                {
-                    Log.Debug(Constants.TAG, "In else");
-                }
-
-                if (users.IsSuccessStatusCode)
-                {
-                    var jsonUsers = await users.Content.ReadAsStringAsync();
-                    Log.Debug(Constants.TAG, jsonUsers);
-                    var usersList = JsonConvert.DeserializeObject<List<User>>(jsonUsers);
-                    RunOnUiThread(() =>
+                        var jsonRegions = await regions.Content.ReadAsStringAsync();
+                        Log.Debug(Constants.TAG, jsonRegions);
+                        var regionsList = JsonConvert.DeserializeObject<List<Region>>(jsonRegions);
+                        RunOnUiThread(() =>
+                        {
+                            Regions.Clear();
+                            Regions.AddRange(regionsList);
+                        });
+                    }
+                    else
                     {
-                        Users.Clear();
-                        Users.AddRange(usersList);
-                    });
+                        Log.Debug(Constants.TAG, "In else");
+                    }
+
+                    if (users.IsSuccessStatusCode)
+                    {
+                        var jsonUsers = await users.Content.ReadAsStringAsync();
+                        Log.Debug(Constants.TAG, jsonUsers);
+                        var usersList = JsonConvert.DeserializeObject<List<User>>(jsonUsers);
+                        RunOnUiThread(() =>
+                        {
+                            Users.Clear();
+                            Users.AddRange(usersList);
+                        });
+                    }
+                    else
+                    {
+                        Log.Debug(Constants.TAG, "In else");
+                    }
+
                 }
-                else
-                {
-                    Log.Debug(Constants.TAG, "In else");
-                }
-                
-                
             }
             catch(HttpRequestException exp)
             {
@@ -103,10 +108,6 @@ namespace LocationAwareMessageMeApp
             {
                 Log.Error(Constants.TAG, e.Message);
             }
-
-
-           
-
         }
 
         private void Init()
@@ -177,26 +178,30 @@ namespace LocationAwareMessageMeApp
                         ReceiverId = SelectedUser.Id,
                         MessageBody = etMessageBody.Text,
                         MessageTime = new DateTime().ToString(),
-                        IsRead = false
+                        IsRead = false,
+                        IsLocked=false,
+                        RegionId=SelectedRegion.RegionId
                     };
-                    HttpClient client = new HttpClient();
 
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(message), Encoding.UTF8,
-                                "application/json");
-
-
-                    HttpResponseMessage result = await client.PostAsync(Constants.SEND_MESSAGE_URL, new FormUrlEncodedContent(message.ToMap()));
-
-                    if (result.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        Toast.MakeText(this, "Message sent!", ToastLength.Short).Show();
-                        Intent GoBackToInbox = new Intent(this, typeof(InboxActivity));
-                        StartActivity(GoBackToInbox);
-                        Finish();
-                    }
-                    else
-                    {
-                        Log.Debug(Constants.TAG, "Error occured");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Access_Token);
+
+                        HttpResponseMessage result = await client.PostAsync(Constants.SEND_MESSAGE_URL, new FormUrlEncodedContent(message.ToMap()));
+
+                        if (result.IsSuccessStatusCode)
+                        {
+                            Toast.MakeText(this, "Message sent!", ToastLength.Short).Show();
+                            Intent GoBackToInbox = new Intent(this, typeof(InboxActivity));
+                            StartActivity(GoBackToInbox);
+                            Finish();
+                        }
+                        else
+                        {
+                            Log.Debug(Constants.TAG, "Error occured");
+                            Log.Debug(Constants.TAG, result.ToString());
+                        }
                     }
                 }
             }catch(Exception exp)
