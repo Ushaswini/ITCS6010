@@ -16,6 +16,7 @@ using LocationAwareMessageMeApp.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Android.Util;
+using EstimoteSdk;
 
 namespace LocationAwareMessageMeApp
 {
@@ -25,21 +26,38 @@ namespace LocationAwareMessageMeApp
         TextView tvFrom;
         TextView tvRegion;
         TextView tvMsgBody;
+        ProgressDialog _progressDialog;
 
         Models.Message MessageToRead;
         ISharedPreferences pref;
         string Access_Token;
         User CurrentUser;
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        
+
+        protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             SetContentView(Resource.Layout.ReadMessage);
-            Init();
-            // Create your application here
+
+            SystemRequirementsChecker.CheckWithDefaultDialogs(this);
+
+            ShowProgress("Loading...");
+
+            await Init().ContinueWith((task) =>
+            {
+                RunOnUiThread(() =>
+                {
+                    EndProgress();
+                });
+                
+            });
+
+            SetIcon();
         }
 
-        private async void Init()
+         async Task Init()
         {
             var str = Intent.Extras.GetString(Constants.INTENT_TAG);
             MessageToRead = JsonConvert.DeserializeObject<Models.Message>(str);
@@ -52,34 +70,23 @@ namespace LocationAwareMessageMeApp
             tvMsgBody = FindViewById<TextView>(Resource.Id.MessageBody);
 
             tvMsgBody.Text = MessageToRead.MessageBody;
+            tvFrom.Text = "From: " + MessageToRead.SenderFullName;
+            tvRegion.Text = "Region: " + MessageToRead.RegionName;
             await GetDataAsync();
         }
 
-        private async Task GetDataAsync()
+        async Task GetDataAsync()
         {
             using (var client = new HttpClient())
             {                
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Access_Token);
-
-                var authorizedResponse = client.GetAsync(String.Format(Constants.GET_REGION_NAME_URL,MessageToRead.RegionId)).Result;
-
-                if (authorizedResponse.IsSuccessStatusCode)
+               
+                HttpContent content = new StringContent("", Encoding.UTF8, "application/json");
+                var resp = await client.PostAsync(String.Format(Constants.EDIT_READ_STATUS_URL, MessageToRead.Id), content);
+                if (resp.IsSuccessStatusCode)
                 {
-                    var response = await authorizedResponse.Content.ReadAsStringAsync();
-                    var region = JsonConvert.DeserializeObject<Models.Region>(response);
-                    tvRegion.Text = region.RegionName;
-                    //todo: sender name
-
-                    var resp = client.PostAsync(String.Format(Constants.EDIT_READ_STATUS_URL, MessageToRead.Id), null);
-                    if (resp.IsCompleted)
-                    {
-                        Log.Debug(Constants.TAG, "Edited read status");
-                    }
-                }
-                else
-                {
-                    Toast.MakeText(this, "Error occured", ToastLength.Short).Show();
+                    Log.Debug(Constants.TAG, "Edited read status");
                 }
             }
         }
@@ -94,8 +101,10 @@ namespace LocationAwareMessageMeApp
             switch (item.ItemId)
             {
                 case Resource.Id.reply:
-                    Intent composeMessage = new Intent(this, typeof(ComposeMessageActivity));
-                    StartActivity(composeMessage);
+                    Intent replyToMessage = new Intent(this, typeof(ComposeMessageActivity));
+                    replyToMessage.PutExtra(Constants.REPLY_MESSAGE_TAG, JsonConvert.SerializeObject(MessageToRead));
+                    StartActivity(replyToMessage);
+                    //Finish();
                     return true;
                 case Resource.Id.delete:
                     ShowDialog();
@@ -119,8 +128,8 @@ namespace LocationAwareMessageMeApp
 
                     if (authorizedResponse.IsSuccessStatusCode)
                     {
-                        Intent GoToInbox = new Intent(this, typeof(InboxActivity));
-                        StartActivity(GoToInbox);
+                        //Intent GoToInbox = new Intent(this, typeof(InboxActivity));
+                        //StartActivity(GoToInbox);
                         Finish();
                     }
                     else
@@ -134,6 +143,27 @@ namespace LocationAwareMessageMeApp
             dialog.Show();
         }
 
+        private void SetIcon()
+        {
+            ActionBar.SetDisplayOptions(ActionBarDisplayOptions.ShowTitle,ActionBarDisplayOptions.UseLogo);
+            ActionBar.SetDisplayShowHomeEnabled(true);
+            ActionBar.SetLogo(Resource.Drawable.ic_launcher);
+            ActionBar.SetDisplayUseLogoEnabled(true);
+        }
+
+        private void ShowProgress(string message)
+        {
+            _progressDialog = new ProgressDialog(this);
+            _progressDialog.SetMessage(message);
+            _progressDialog.SetProgressStyle(ProgressDialogStyle.Spinner);
+            _progressDialog.SetCancelable(false);
+            _progressDialog.Show();
+        }
+
+        private void EndProgress()
+        {
+            _progressDialog.Dismiss();
+        }
 
     }
 }

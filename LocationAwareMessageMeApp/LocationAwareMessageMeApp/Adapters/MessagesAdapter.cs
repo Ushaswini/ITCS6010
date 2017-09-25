@@ -49,7 +49,7 @@ namespace LocationAwareMessageMeApp.Adapters
                 holder.MessageBody = (TextView)view.FindViewById(Resource.Id.messageBody);
                 holder.MessageTime = (TextView)view.FindViewById(Resource.Id.messageTime);
 
-                holder.IsLock = (ImageView)view.FindViewById(Resource.Id.isLocked);
+                holder.IsUnLocked = (ImageView)view.FindViewById(Resource.Id.isLocked);
                 holder.IsRead = (ImageView)view.FindViewById(Resource.Id.isRead);
 
 
@@ -74,7 +74,7 @@ namespace LocationAwareMessageMeApp.Adapters
             holder.MessageBody.Text = text;
             holder.MessageTime.Text = item.MessageTime;
 
-            holder.IsLock.SetImageResource(item.IsLocked ? Resource.Drawable.locked : Resource.Drawable.lock_open);
+            holder.IsUnLocked.SetImageResource(item.IsUnLocked ? Resource.Drawable.lock_open : Resource.Drawable.locked);
             holder.IsRead.SetImageResource(item.IsRead ? Resource.Drawable.circle_grey : Resource.Drawable.circle_blue);
             
             
@@ -85,7 +85,7 @@ namespace LocationAwareMessageMeApp.Adapters
         {
             public TextView MessageBody { get; set; }
             public TextView MessageTime { get; set; }
-            public ImageView IsLock { get; set; }
+            public ImageView IsUnLocked { get; set; }
             public ImageView IsRead { get; set; }
 
         }

@@ -13,6 +13,7 @@ using Android.Preferences;
 using Android.Net;
 using Android.Support.Design.Widget;
 using System.Net.Http.Headers;
+using EstimoteSdk;
 
 namespace LocationAwareMessageMeApp
 {
@@ -23,6 +24,8 @@ namespace LocationAwareMessageMeApp
         EditText etPassword;
         Button btnLogin;
         Button btnRegister;
+        ProgressDialog _progressDialog;
+
         ISharedPreferences pref;
         ISharedPreferencesEditor prefEditor;
 
@@ -32,13 +35,15 @@ namespace LocationAwareMessageMeApp
 
             SetContentView(Resource.Layout.Login);
 
+            SetIcon();
+
             Init();
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            //SystemRequirementsChecker.CheckWithDefaultDialogs(this);
+            SystemRequirementsChecker.CheckWithDefaultDialogs(this);
         }
 
         private void Init()
@@ -74,6 +79,8 @@ namespace LocationAwareMessageMeApp
 
                 if (info != null)
                 {
+                    ShowProgress("Trying to login..");
+
                     using (var client = new HttpClient())
                     {
                         client.DefaultRequestHeaders.Accept.Clear();
@@ -109,10 +116,12 @@ namespace LocationAwareMessageMeApp
 
                                 Intent openInbox = new Intent(this, typeof(InboxActivity));
                                 StartActivity(openInbox);
+                                EndProgress();
                                 Finish();
                             }
                             else
                             {
+                                EndProgress();
                                 Log.Debug(Constants.TAG, "Error occured");
 
 
@@ -152,6 +161,28 @@ namespace LocationAwareMessageMeApp
             }
 
             return isInValid;
+        }
+
+        private void SetIcon()
+        {
+            ActionBar.SetDisplayOptions(ActionBarDisplayOptions.ShowTitle, ActionBarDisplayOptions.UseLogo);
+            ActionBar.SetDisplayShowHomeEnabled(true);
+            ActionBar.SetLogo(Resource.Drawable.ic_launcher);
+            ActionBar.SetDisplayUseLogoEnabled(true);
+        }
+
+        private void ShowProgress(string message)
+        {
+            _progressDialog = new ProgressDialog(this);
+            _progressDialog.SetMessage(message);
+            _progressDialog.SetProgressStyle(ProgressDialogStyle.Spinner);
+            _progressDialog.SetCancelable(false);
+            _progressDialog.Show();
+        }
+
+        private void EndProgress()
+        {
+            _progressDialog.Dismiss();
         }
     }
 }
