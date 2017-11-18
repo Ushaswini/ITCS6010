@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using static EstimoteSdk.Utils;
 using System;
 using System.Linq;
+using Android.Util;
 
 namespace iBeaconPracticeApp
 {
@@ -70,10 +71,10 @@ namespace iBeaconPracticeApp
 
         protected void InitilizeRegions()
         {
-            _regionBeacon = new Region(Constants.DISCOUNT_REGION_IDENTIFIER, Constants.UUID);
-            _regionGrocery = new Region(Constants.GROCERY_IDENTIFIER, Constants.UUID, Constants.MAJOR_GROCERY, Constants.MINOR_GROCERY);
-            _regionLifeStyle = new Region(Constants.LIFESTYLE_IDENTIFIER, Constants.UUID, Constants.MAJOR_LIFESTYLE, Constants.MINOR_LIFESTYLE);
-            _regionProduce = new Region(Constants.PRODUCE_IDENTIFIER, Constants.UUID, Constants.MAJOR_PRODUCE, Constants.MINOR_PRODUCE);
+            _regionBeacon = new Region(Constants.DISCOUNT_REGION_IDENTIFIER, "B9407F30-F5F8-466E-AFF9-25556B57FE6D");
+            _regionGrocery = new Region(Constants.GROCERY_IDENTIFIER, "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 15212, 31506);
+            _regionLifeStyle = new Region(Constants.LIFESTYLE_IDENTIFIER, "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 48071, 25324);
+            _regionProduce = new Region(Constants.PRODUCE_IDENTIFIER, "B9407F30-F5F8-466E-AFF9-25556B57FE6D", 26535, 44799);
        
         }
 
@@ -93,7 +94,7 @@ namespace iBeaconPracticeApp
 
             _beaconManager = new BeaconManager(this);
 
-            _beaconManager.SetBackgroundScanPeriod(150,2000);
+            _beaconManager.SetForegroundScanPeriod(150, 2000);
 
             _beaconManager.Ranging += OnRanging;
 
@@ -102,8 +103,11 @@ namespace iBeaconPracticeApp
 
         private async void OnRanging(object sender, BeaconManager.RangingEventArgs e)
         {
+            Log.Debug("demo", "IN Ranging " + e.Beacons.Count);
             if (e.Beacons.Count > 0)
             {
+                Log.Debug("demo", "List > 0");
+
                 foreach (Beacon beacon in e.Beacons)
                 {
 
@@ -128,6 +132,7 @@ namespace iBeaconPracticeApp
 
                         if (_currentBeacon != null)
                         {
+                            //Log.Debug("demo", _currentBeacon.Major.ToString());
                             await GetDataAsync(_currentBeacon.Major.ToString());
                         }
                     }
@@ -135,7 +140,7 @@ namespace iBeaconPracticeApp
             }
             else
             {
-                if (((new DateTime()).Ticks - _lastActiveTime) > 5300)
+                if (((new DateTime()).Ticks - _lastActiveTime) > 8300)
                 {
                     await GetDataAsync("");
                 }
@@ -150,38 +155,46 @@ namespace iBeaconPracticeApp
 
         protected async Task GetDataAsync(string majorIdentifier)
         {
-            string url = "";
-            string message = "";
-            if (majorIdentifier.Equals(Constants.MAJOR_GROCERY))
+            try
             {
-                url = string.Format(Constants.URL, Constants.GROCERY_IDENTIFIER);
-                message = Constants.GROCERY_IDENTIFIER;
-            }else if (majorIdentifier.Equals(Constants.MAJOR_LIFESTYLE))
-            {
-                url = string.Format(Constants.URL, Constants.LIFESTYLE_IDENTIFIER);
-                message = Constants.LIFESTYLE_IDENTIFIER;
-            }
-            else if (majorIdentifier.Equals(Constants.MAJOR_PRODUCE))
-            {
-                url = string.Format(Constants.URL, Constants.PRODUCE_IDENTIFIER);
-                message = Constants.PRODUCE_IDENTIFIER;
-            }
-            else
-            {
-                url = Constants.BASE_URL;
-                message = "All items";
-            }
+                string url = "";
+                string message = "";
+                if (majorIdentifier.Equals("15212"))
+                {
+                    url = string.Format(Constants.URL, Constants.GROCERY_IDENTIFIER);
+                    message = Constants.GROCERY_IDENTIFIER;
+                }
+                else if (majorIdentifier.Equals("48071"))
+                {
+                    url = string.Format(Constants.URL, Constants.LIFESTYLE_IDENTIFIER);
+                    message = Constants.LIFESTYLE_IDENTIFIER;
+                }
+                else if (majorIdentifier.Equals("26535"))
+                {
+                    url = string.Format(Constants.URL, Constants.PRODUCE_IDENTIFIER);
+                    message = Constants.PRODUCE_IDENTIFIER;
+                }
+                else
+                {
+                    url = Constants.BASE_URL;
+                    message = "All items";
+                }
 
-            Toast.MakeText(this, message, ToastLength.Long).Show();
+                Toast.MakeText(this, message, ToastLength.Short).Show();
 
-            HttpClient client = new HttpClient();
-            var data = await client.GetStringAsync(url);
-            var products = JsonConvert.DeserializeObject<List<Product>>(data);
-            products = products.OrderBy(i => i.RegionId).ToList();
+                HttpClient client = new HttpClient();
+                var data = await client.GetStringAsync(url);
+                var products = JsonConvert.DeserializeObject<List<Product>>(data);
+                products = products.OrderBy(i => i.RegionId).ToList();
 
-            RunOnUiThread(() => {
-                adapter.UpdateData(products);
-            });
+                RunOnUiThread(() => {
+                    adapter.UpdateData(products);
+                });
+            }catch(Exception e)
+            {
+                Log.Error("demo", e.Message);
+            }
+            
             
         }
     }

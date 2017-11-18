@@ -24,7 +24,7 @@ namespace InClass02_DiscountsAPI.Controllers
         }
 
         //GET: api/Discounts/Region/1
-        public IQueryable<Discount> GetDiscountsForRegionId(string regionName)
+        public IQueryable<Discount> GetDiscountsForRegionName(string regionName)
         {
             var id = (from r in db.Regions where r.RegionName == regionName select r.Id).FirstOrDefault();
             var result = from d in db.Discounts where d.RegionId == (id) select d;

@@ -18,13 +18,15 @@ using System.Data.Entity.Migrations;
 
 namespace Homework1.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/Messages")]
     public class MessagesController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Messages
-        
+
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
         public IQueryable<Message> GetMessages()
         {
             return db.Messages;

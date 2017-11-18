@@ -9,6 +9,8 @@ using Microsoft.Owin.Security.Jwt;
 using System.Configuration;
 using Microsoft.Owin.Security.DataHandler.Encoder;
 using Homework1.Identity;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.AspNet.Identity;
 
 namespace Homework1
 {
@@ -24,9 +26,13 @@ namespace Homework1
 
             var issuer = ConfigurationManager.AppSettings["issuer"];
             var secret = TextEncodings.Base64Url.Decode(ConfigurationManager.AppSettings["secret"]);
+
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions());
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enable the application to use a cookie to store information for the signed in user
             app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions
@@ -34,9 +40,9 @@ namespace Homework1
                 AuthenticationMode = AuthenticationMode.Active,
                 AllowedAudiences = new[] { "Any" },
                 IssuerSecurityTokenProviders = new IIssuerSecurityTokenProvider[]
-     {
-        new SymmetricKeyIssuerSecurityTokenProvider(issuer, secret)
-     }
+                    {
+                        new SymmetricKeyIssuerSecurityTokenProvider(issuer, secret)
+                    }
             });
 
             app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
@@ -47,6 +53,9 @@ namespace Homework1
                 Provider = new CustomOAuthProvider(),
                 AccessTokenFormat = new CustomJwtFormat(issuer)
             });
+
+            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+
 
         }
     }

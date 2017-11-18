@@ -29,7 +29,8 @@ namespace iBeaconPracticeApp
         public static readonly int MAJOR_PRODUCE = 26535;
         public static readonly int MINOR_PRODUCE = 44799;
 
-        public static readonly string URL = BASE_URL + "?regionName={0}";
+       
         public static readonly string BASE_URL = "http://inclass02-discountsapi.azurewebsites.net/api/Discounts";
+        public static readonly string URL = BASE_URL + "?regionName={0}";
     }
 }
