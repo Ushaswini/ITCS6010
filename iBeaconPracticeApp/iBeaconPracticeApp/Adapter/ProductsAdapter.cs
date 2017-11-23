@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using iBeaconPracticeApp.Models;
-using Square.Picasso;
+using FFImageLoading;
 
 namespace iBeaconPracticeApp
 {
@@ -58,7 +52,7 @@ namespace iBeaconPracticeApp
                 holder.Price = (TextView)view.FindViewById(Resource.Id.tv_price);
                 holder.Region = (TextView)view.FindViewById(Resource.Id.tv_region);
                 holder.Discount = (TextView)view.FindViewById(Resource.Id.tv_discount);
-                holder.ProductImage = (ImageView)view.FindViewById(Resource.Id.imageView);
+                holder.ProductImage = (FFImageLoading.Views.ImageViewAsync)view.FindViewById(Resource.Id.imageView);
                 
 
                 view.Tag = holder;
@@ -67,29 +61,34 @@ namespace iBeaconPracticeApp
             {
                 holder = view.Tag as ProductViewHolder;
             }
-
-            //Now the holder holds reference to our view objects, whether they are 
-            //recycled or created new. 
-            //Next we need to populate the views
-
+            
             var item = Products[position];
             holder.Name.Text = item.Name;
             holder.Discount.Text = item.Discount;
-            holder.Price.Text = String.Format("{0:C}", item.Price);
+            holder.Price.Text = Java.Lang.String.Format("{0:C}", item.Price);
             holder.Region.Text = item.Region;
-            Picasso.With(Context)
-                    .Load(item.ImageUrl)
-                    .Into(holder.ProductImage);
+            
+            ImageService.Instance
+                .LoadUrl(item.ImageUrl)
+                .Success(() =>
+                {
+                    // your code here...
+                })
+                .Error((exception) => {
+                    Console.Write(exception.Message);
+                })
+                .Into(holder.ProductImage);
 
             return view;
         }
+       
         private class ProductViewHolder : Java.Lang.Object
         {
             public TextView Name { get; set; }
             public TextView Price { get; set; }
             public TextView Discount { get; set; }
             public TextView Region { get; set; }
-            public ImageView ProductImage { get; set; }
+            public FFImageLoading.Views.ImageViewAsync ProductImage { get; set; }
             
         }
 

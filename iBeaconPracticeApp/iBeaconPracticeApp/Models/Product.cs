@@ -18,11 +18,11 @@ namespace iBeaconPracticeApp.Models
         string _discount,_imageUrl,_name,_price,_region;
         int _regionId;
 
-        [JsonProperty("DiscountValue")]
+        [JsonProperty("DiscountPercent")]
         public string Discount { get => _discount; set => _discount = value; }
-        [JsonProperty("Photo")]
+        [JsonProperty("ImageUrl")]
         public string ImageUrl { get => _imageUrl; set => _imageUrl = value; }
-        [JsonProperty("Name")]
+        [JsonProperty("OfferText")]
         public string Name { get => _name; set => _name = value; }
         [JsonProperty("Price")]
         public string Price { get => _price; set => _price = value; }

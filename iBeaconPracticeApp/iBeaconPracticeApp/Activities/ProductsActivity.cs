@@ -14,8 +14,8 @@ using Android.Util;
 
 namespace iBeaconPracticeApp
 {
-    [Activity(Label = "Welcome!!", MainLauncher = true, Icon = "@drawable/icon")]
-    public class MainActivity : Activity, BeaconManager.IServiceReadyCallback
+    [Activity(Label ="Discounts!")]
+    public class ProductsActivity : Activity, BeaconManager.IServiceReadyCallback
     {
         BeaconManager _beaconManager;
         Region _regionProduce;
@@ -148,6 +148,7 @@ namespace iBeaconPracticeApp
             }
 
         }
+
         private async void OnExitedRegion(object sender, BeaconManager.ExitedRegionEventArgs e)
         {
             await GetDataAsync("");
@@ -161,22 +162,22 @@ namespace iBeaconPracticeApp
                 string message = "";
                 if (majorIdentifier.Equals("15212"))
                 {
-                    url = string.Format(Constants.URL, Constants.GROCERY_IDENTIFIER);
+                    url = string.Format(Constants.REGION_URL, Constants.GROCERY_IDENTIFIER);
                     message = Constants.GROCERY_IDENTIFIER;
                 }
                 else if (majorIdentifier.Equals("48071"))
                 {
-                    url = string.Format(Constants.URL, Constants.LIFESTYLE_IDENTIFIER);
+                    url = string.Format(Constants.REGION_URL, Constants.LIFESTYLE_IDENTIFIER);
                     message = Constants.LIFESTYLE_IDENTIFIER;
                 }
                 else if (majorIdentifier.Equals("26535"))
                 {
-                    url = string.Format(Constants.URL, Constants.PRODUCE_IDENTIFIER);
+                    url = string.Format(Constants.REGION_URL, Constants.PRODUCE_IDENTIFIER);
                     message = Constants.PRODUCE_IDENTIFIER;
                 }
                 else
                 {
-                    url = Constants.BASE_URL;
+                    url = Constants.ALL_URL;
                     message = "All items";
                 }
 
